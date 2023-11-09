@@ -29,3 +29,7 @@
 .pilt:active {
   transform: rotate(5deg);
 }
+
+.kuldne {
+  color: goldenrod;
+}
