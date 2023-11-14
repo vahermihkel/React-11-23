@@ -19,14 +19,17 @@ function Ostukorv() {
     <div>
       <div>Ostukorvis on {ostukorv.length} toode(t)</div>
       {ostukorv.map((toode, index) => 
-        <div key={toode}>
-          <span>{toode}</span>
+        <div key={index}>
+          <img className="pilt" src={toode.pilt} alt="" />
+          <div>{toode.nimi}</div>
+          <div>{toode.hind} €</div>
+          {/* <div>{toode.aktiivne + 0}</div> */}
           <button onClick={() => kustuta(index)}>x</button>
         </div>)}
       {ostukorv.length === 0 && 
       <>
         <div>Ostukorv on tühi</div>
-        <Link to="/avaleht">
+        <Link to="/tooted">
           <button>Tooteid lisama</button>
         </Link>
       </>}

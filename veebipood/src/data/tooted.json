@@ -1,0 +1,7 @@
+[
+  {"nimi": "BMW i5", "hind": 35000, "aktiivne": true, "pilt": "https://www.bmwgroup.com/content/dam/grpw/websites/bmwgroup_com/brands/bmw_i/2023/230201_BMW_Group_BMW_i4eDrive40.png.grp-transform/small/230201_BMW_Group_BMW_i4eDrive40.png"}, 
+  {"nimi": "Nobe", "hind": 25000, "aktiivne": false, "pilt": "https://dalton.ee/wp-content/uploads/2019/10/nobe6.jpg"}, 
+  {"nimi": "Tesla model S", "hind": 85000, "aktiivne": false, "pilt": "https://images.prismic.io/carwow/c340a77d-af56-4562-abfb-bd5518ccb292_2023+Tesla+Model+X+front+quarter+moving.jpg"}, 
+  {"nimi": "Kia", "hind": 27000, "aktiivne": true, "pilt": "https://www.kia.com/content/dam/kwcms/kme/global/en/assets/contents/about-kia/brand/range/1/freecoding/tabs/kia-sorento-phev-gls-my23-m4bmineralblue-19_0004@2x.jpg"}, 
+  {"nimi": "Saab", "hind": 29000, "aktiivne": true, "pilt": "https://d2dsc1gf0t80gb.cloudfront.net/wp-content/uploads/2020/11/05135703/Robb-Pritchard-Neo-Brothers-Saab-96-24-1200x628.jpg"}
+]

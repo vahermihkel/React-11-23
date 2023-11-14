@@ -39,8 +39,8 @@ function App() {
         <Route path='ostukorv' element={ <Ostukorv /> } />
         <Route path='lisa-toode' element={ <LisaToode /> } />
         <Route path='tooted' element={ <Tooted /> } />
-        <Route path='toode' element={ <YksToode /> } />
-        <Route path='muuda' element={ <MuudaToode /> } />
+        <Route path='toode/:nimi' element={ <YksToode /> } />
+        <Route path='muuda/:index' element={ <MuudaToode /> } />
         <Route path='*' element={ <NotFound /> } />
       </Routes>
     

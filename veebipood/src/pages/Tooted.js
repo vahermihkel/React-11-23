@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
-import tootedFailist from "../data/ostukorv.json"
+import ostukorvFailist from "../data/ostukorv.json"
+import tootedFailist from "../data/tooted.json"
+import { Link } from 'react-router-dom';
 
 function Tooted() {
-  const [tooted, setTooted] = useState(["BMW", "Nobe", "Tesla", "Kia", "Saab"]);
+  const [tooted, setTooted] = useState(tootedFailist);
 
   const sorteeriZA = () => {
     tooted.sort((a,b) => b.localeCompare(a));
@@ -19,7 +21,7 @@ function Tooted() {
   }
 
   const lisaOstukorvi = (toode) => {
-    tootedFailist.push(toode); // .add()
+    ostukorvFailist.push(toode); // .add()
   }
 
   console.log("re-renderdasin");
@@ -28,10 +30,20 @@ function Tooted() {
     <div>
       <button onClick={sorteeriZA}>Sorteeri Z-A</button>
       <button onClick={filtreeriVah4Tahte}>Jäta alles vähemalt 4 tähelised</button>
-      {tooted.map((toode) => 
-        <div key={toode}>
-          <div>{toode}</div>
+      {tooted.map((toode, index) => 
+        <div key={toode.nimi}>
+          <img className="pilt" src={toode.pilt} alt="" />
+          <div>{toode.nimi}</div>
+          <div>{toode.hind.toFixed(2)} €</div>
+          <div>{toode.aktiivne + 0}</div>
           <button onClick={() => lisaOstukorvi(toode)}>Lisa ostukorvi</button>
+          <Link to={"/toode/" + toode.nimi.toLowerCase().replaceAll(" ", "-").replaceAll("õ", "o").replaceAll(",", "")}>
+            <button>Vaata detailsemalt</button>
+          </Link>
+
+          <Link to={"/muuda/" + index}>
+            <button>Muuda</button>
+          </Link>
         </div>)}
     </div>
   )
