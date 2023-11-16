@@ -16,6 +16,10 @@ import Login from './pages/auth/Login';
 import Signup from './pages/auth/Signup';
 import NavigationBar from './components/NavigationBar';
 
+// lisada 3-4s keel
+// tõlkida tehtud failid
+// võib eesti keelsele Bootstrapi/tõlget panna
+
 function App() {
   return (
     <div className="App">
