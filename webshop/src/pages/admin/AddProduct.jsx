@@ -1,7 +1,7 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
-import productsFromFile from "../../data/products.json";
+// import productsFromFile from "../../data/products.json";
 
 
 // NÕUDED
@@ -17,7 +17,18 @@ const AddProduct = () => {
   const descriptionRef = useRef();
   const categoryRef = useRef();
   const isActiveRef = useRef();
-  const previousMaximumId = Math.max(...productsFromFile.map(product => product.id));
+  const [dbProducts, setDbProducts] = useState([]); // täpselt andmebaasi seis
+
+  const previousMaximumId = Math.max(...dbProducts.map(product => product.id));
+  const productsDbUrl = process.env.REACT_APP_PRODUCTS_DB_URL;
+  
+  useEffect(() => {
+    fetch(productsDbUrl)
+      .then(res => res.json())
+      .then(json => {
+        setDbProducts(json);
+      })
+  }, [productsDbUrl]);
 
   const addProduct = () => {
     if (nameRef.current.value === "") {
@@ -28,7 +39,7 @@ const AddProduct = () => {
       return
     }
   
-    productsFromFile.push(
+    dbProducts.push(
       {
         "id": previousMaximumId + 1,
         "image": imageRef.current.value,
@@ -40,9 +51,8 @@ const AddProduct = () => {
       }
     )
 
-    navigate("/admin/products");
-
-    
+    fetch(productsDbUrl, {"method": "PUT", "body": JSON.stringify(dbProducts)})
+      .then(() => navigate("/admin/products"));
   }
   
 

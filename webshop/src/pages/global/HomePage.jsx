@@ -1,30 +1,29 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import productsFromFile from "../../data/products.json";
-// import cartFromFile from "../../data/cart.json";
-
-// NÕUDED
-// võimaldada minna SingleProduct lehele +
-
-// lisa localStorage-sse ostukorv
-// võiks läbi faili teha ehk lisada faili üks toode juurde +
-
-// Sorteerimine A-Z ja teistpidi +
-// Sorteerimine hind mõlemat pidi +
-
-// Kategooriate alusel filterdamine: +
-//    -star wars +
-//    -lego +
-//    -figure +
+import { Spinner } from 'react-bootstrap';
+// import productsFromFile from "../../data/products.json";
 
 const HomePage = () => {
   const { t } = useTranslation();
 
-  const [products, setProducts] = useState(productsFromFile);
-  const productsCopy = productsFromFile;
+  const [products, setProducts] = useState([]); // väljanäidatav HTMLs
+  // const productsCopy = productsFromFile;
+  const [productsCopy, setDbProducts] = useState([]); // täpselt andmebaasi seis
   const [nameSortToggle, setNameSortToggle] = useState(true); // kasutame selleks, et toggledada name sortimist
   const [priceSortToggle, setPriceSortToggle] = useState(true); // kasutame selleks, et toggledada hinna sortimist
+  const [loading, setLoading] = useState(true);
+  const productsDbUrl = process.env.REACT_APP_PRODUCTS_DB_URL;
+  
+  useEffect(() => {
+    fetch(productsDbUrl)
+      .then(res => res.json())
+      .then(json => {
+        setProducts(json);
+        setDbProducts(json);
+        setLoading(false);
+      })
+  }, [productsDbUrl]);
 
   const sortByName = () => {
     let sortDesc = nameSortToggle;
@@ -75,6 +74,10 @@ const HomePage = () => {
     // 3. lisada juurde   .push()
     // 4. paneme jutumärgid ise peale -> keerame Array Stringiks
     // 5. panna tagasi localStoragesse (set abil ehk asenda uue väärtusega vana)
+  }
+
+  if (loading) {
+    return <Spinner />
   }
 
 

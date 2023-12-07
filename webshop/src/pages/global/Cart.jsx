@@ -90,6 +90,6 @@ const Cart = () => {
 export default Cart
 
 // 07.12   14.00-17.15   Firebase -> Hosting, Kategooriad Andmebaasi, Tooted andmebaasi
-// 12.12                 Makse: EveryPay + kogused ostukorvis + kujundust + css modules
-// 14.12                 Components + komponentide vaheline suhtlus (props)
+// 12.12   14.00-17.15   Makse: EveryPay + kogused ostukorvis + kujundust + css modules
+// 14.12   17.30-20.30   Components + komponentide vaheline suhtlus (props)
 // 19.12                 Context
