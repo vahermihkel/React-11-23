@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from 'react-bootstrap';
-// import productsFromFile from "../../data/products.json";
+import styles from "../../css/HomePage.module.css";
 
 const HomePage = () => {
   const { t } = useTranslation();
@@ -61,12 +61,21 @@ const HomePage = () => {
     setProducts(productsCopy);
   }
 
-  const addToCart = (product) => {
+  const addToCart = (productClicked) => {
     // cartFromFile.push(product);
     // localStorage.setItem("cart", cartFromFile);
 
     const cartLS = JSON.parse(localStorage.getItem("cart") || "[]");
-    cartLS.push(product);
+
+    const index = cartLS.findIndex(p => p.product.id === productClicked.id);
+    if (index !== -1) {
+      cartLS[index].quantity++;
+      // cartLS[index].quantity += 1;
+      // cartLS[index].quantity = cartLS[index].quantity + 1;
+    } else {
+      cartLS.push({"quantity": 1, "product": productClicked});
+    }
+
     localStorage.setItem("cart", JSON.stringify(cartLS));
 
     // 1. võtta vana seis localStoragest
@@ -99,18 +108,20 @@ const HomePage = () => {
       </div>
         
       </div>
-      { 
-      products.map(product =>
-      <div key={product.id}>
-        <img src={product.image} alt="" />
-        <div>{product.name}</div>
-        <div>{product.price} €</div>
-        <Link to={"/product/" + product.id}>
-            <button>{t("home.detailed")}</button>
-        </Link>
-        <button onClick={() => addToCart(product)} >{t("home.add-to-cart")}</button>
+      <div className={styles.products}>
+        { 
+        products.map(product =>
+        <div className={styles.product} key={product.id}>
+          <img src={product.image} alt="" />
+          <div>{product.name}</div>
+          <div>{product.price} €</div>
+          <Link to={"/product/" + product.id}>
+              <button>{t("home.detailed")}</button>
+          </Link>
+          <button onClick={() => addToCart(product)} >{t("home.add-to-cart")}</button>
+        </div>
+        )}
       </div>
-      )}
       
     </div>
   )
