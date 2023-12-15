@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ParcelMachines from "../../components/cart/ParcelMachines";
 import styles from "../../css/Cart.module.css";
+import Payment from "../../components/cart/Payment";
 
 const Cart = () => {
   const [cart, setCart] = useState(
@@ -85,6 +86,8 @@ const Cart = () => {
       </div>
 
       <ParcelMachines />
+
+      <Payment cartSum={calculateCartSum()} />
     </div>
   );
 };
@@ -92,6 +95,11 @@ const Cart = () => {
 export default Cart;
 
 // 07.12   14.00-17.15   Firebase -> Hosting, Kategooriad Andmebaasi, Tooted andmebaasi
-// 12.12   14.00-17.15   Makse: EveryPay + kogused ostukorvis + kujundust + css modules
-// 14.12   17.30-20.30   Components + komponentide vaheline suhtlus (props)
-// 19.12                 Context
+// 12.12   14.00-17.15   kogused ostukorvis + kujundust + css modules
+// 15.12   14.00-17.15   Makse: EveryPay + Components + komponentide vaheline suhtlus (props)
+// 19.12   14.00-17.15   Context
+// 21.12   ?17.30-20.45?   <-- arutame teisipäeval
+// 26.12   EI TOIMU
+// 28.12   ?17.30-20.45?
+// 02.01   ?17.30-20.45?
+// 04.01   EI TOIMU
