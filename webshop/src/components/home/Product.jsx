@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styles from "../../css/HomePage.module.css";
+import { useContext } from 'react';
+import { CartSumContext } from '../../store/CartSumContext';
+import { calculateCartSum } from '../../util/calculationsUtil';
 
 const Product = ({ product }) => {
   const { t } = useTranslation();
+  const { setCartSum } = useContext(CartSumContext);
 
   const addToCart = (productClicked) => {
     // cartFromFile.push(product);
@@ -19,7 +23,7 @@ const Product = ({ product }) => {
     } else {
       cartLS.push({"quantity": 1, "product": productClicked});
     }
-
+    setCartSum(calculateCartSum(cartLS));
     localStorage.setItem("cart", JSON.stringify(cartLS));
 
     // 1. võtta vana seis localStoragest

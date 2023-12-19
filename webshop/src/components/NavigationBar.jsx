@@ -5,9 +5,12 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useContext } from 'react';
+import { CartSumContext } from '../store/CartSumContext';
 
 const NavigationBar = () => {
   const { t, i18n } = useTranslation();
+  const { cartSum, cartDifferentItems, cartTotalItems } = useContext(CartSumContext);
 
   // function changeLang() {}
 
@@ -34,6 +37,8 @@ const NavigationBar = () => {
             </NavDropdown>
           </Nav>
           <Nav>
+            <span>{ cartDifferentItems } / { cartTotalItems } tk</span> &nbsp;
+            <span>{ cartSum } €</span>
             <Nav.Link as={Link} to="/login">{t("nav.login")}</Nav.Link>
             <Nav.Link as={Link} to="/signup">{t("nav.signup")}</Nav.Link>
           </Nav>

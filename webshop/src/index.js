@@ -6,13 +6,16 @@ import App from './App';
 import reportWebVitals from './util/reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import './i18n';
+import { CartSumContextProvider } from './store/CartSumContext';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-     <App />
+      <CartSumContextProvider>
+        <App />
+     </CartSumContextProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

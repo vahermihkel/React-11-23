@@ -1,20 +1,24 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ParcelMachines from "../../components/cart/ParcelMachines";
 import styles from "../../css/Cart.module.css";
 import Payment from "../../components/cart/Payment";
+import { CartSumContext } from "../../store/CartSumContext";
+import { calculateCartSum } from "../../util/calculationsUtil";
 
 const Cart = () => {
   const [cart, setCart] = useState(
     JSON.parse(localStorage.getItem("cart") || "[]")
   );
   const { t } = useTranslation();
+  const { setCartSum } = useContext(CartSumContext);
 
   const emptyCart = () => {
     cart.splice(0);
     setCart(cart.slice());
     localStorage.setItem("cart", JSON.stringify(cart));
+    setCartSum("0.00");
   };
 
   const decreaseQuantity = (index) => {
@@ -24,34 +28,40 @@ const Cart = () => {
     }
     setCart(cart.slice());
     localStorage.setItem("cart", JSON.stringify(cart));
+    setCartSum(calculateCartSum(cart));
   }
 
   const increaseQuantity = (index) => {
     cart[index].quantity++;
     setCart(cart.slice());
     localStorage.setItem("cart", JSON.stringify(cart));
+    setCartSum(calculateCartSum(cart));
   }
 
   const deleteFromCart = (index) => {
     cart.splice(index, 1);
     setCart(cart.slice());
     localStorage.setItem("cart", JSON.stringify(cart));
+    setCartSum(calculateCartSum(cart));
   };
 
-  const calculateCartSum = () => {
-    let sum = 0;
-    cart.forEach((p) => (sum += p.product.price * p.quantity));
-    return sum.toFixed(2);
-  };
+  // const calculateCartSum = () => {
+  //   let sum = 0;
+  //   cart.forEach((p) => (sum += p.product.price * p.quantity));
+  //   return sum.toFixed(2);
+  // };
 
   return (
     <div>
       {cart.length > 0 && (
-        <button onClick={emptyCart}>{t("cart.empty")}</button>
+        <>
+          <button onClick={emptyCart}>{t("cart.empty")}</button>
+          <div>
+            {t("cart.cart-has")} {cart.length} {t("cart.products")}
+          </div>
+        </>
       )}
-      <div>
-        {t("cart.cart-has")} {cart.length} {t("cart.products")}
-      </div>
+      
       {cart.map((cartProduct, id) => (
         <div className={styles.product} key={id}>
           <img className={styles.image} src={cartProduct.product.image} alt="" />
@@ -72,22 +82,26 @@ const Cart = () => {
           </button>
         </div>
       ))}
-      {cart.length === 0 && (
+      {cart.length === 0 ? (
         <div className={styles["cart-bottom"]}>
           <div>{t("cart.empty-cart")}</div>
           <Link to="/">
             <button>{t("cart.view-products")}</button>
           </Link>
         </div>
-      )}
+      ) :
+        <>
+          <div>
+            {t("cart.total-sum")}: {calculateCartSum(cart)} €
+          </div>
 
-      <div>
-        {t("cart.total-sum")}: {calculateCartSum()} €{" "}
-      </div>
+          <ParcelMachines />
 
-      <ParcelMachines />
+          <Payment cartSum={calculateCartSum(cart)} />
+        </>
+      }
 
-      <Payment cartSum={calculateCartSum()} />
+      
     </div>
   );
 };
@@ -98,8 +112,8 @@ export default Cart;
 // 12.12   14.00-17.15   kogused ostukorvis + kujundust + css modules
 // 15.12   14.00-17.15   Makse: EveryPay + Components + komponentide vaheline suhtlus (props)
 // 19.12   14.00-17.15   Context
-// 21.12   ?17.30-20.45?   <-- arutame teisipäeval
+// 21.12   14.00-17.15   <-- arutame teisipäeval
 // 26.12   EI TOIMU
-// 28.12   ?17.30-20.45?
+// 28.12   17.30-20.45
 // 02.01   ?17.30-20.45?
 // 04.01   EI TOIMU
