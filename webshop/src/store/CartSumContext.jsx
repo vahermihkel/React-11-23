@@ -3,7 +3,14 @@ import { calculateCartSum, calculateTotalItems } from "../util/calculationsUtil"
 
 
       // tema kaudu hakkan võtma mida context väljastab
-export const CartSumContext = createContext();
+export const CartSumContext = createContext({
+  cartSum: 0,
+  cartDifferentItems: 0,
+  cartTotalItems: 0,
+  setCartSum: (cartSum) => {},
+  setCartDifferentItems: (itemsCount) => {},
+  setCartTotalItems: (itemsCount) => {}
+});
 
             // index.js faili -> tema sees olev useState globaalne
 export function CartSumContextProvider({ children }) {
@@ -12,7 +19,6 @@ export function CartSumContextProvider({ children }) {
 
   const [cartDifferentItems, setCartDifferentItems] = useState(cart.length);
   const [cartTotalItems, setCartTotalItems] = useState(calculateTotalItems(cart));
-
 
   return (     // saan igast failist, kes contexti impordib neid alumisi kätte
     <CartSumContext.Provider value={{

@@ -5,20 +5,26 @@ import ParcelMachines from "../../components/cart/ParcelMachines";
 import styles from "../../css/Cart.module.css";
 import Payment from "../../components/cart/Payment";
 import { CartSumContext } from "../../store/CartSumContext";
-import { calculateCartSum } from "../../util/calculationsUtil";
+import { calculateCartSum, calculateTotalItems } from "../../util/calculationsUtil";
 
 const Cart = () => {
   const [cart, setCart] = useState(
     JSON.parse(localStorage.getItem("cart") || "[]")
   );
   const { t } = useTranslation();
-  const { setCartSum } = useContext(CartSumContext);
+  const { setCartSum, setCartDifferentItems, setCartTotalItems } = useContext(CartSumContext);
+
+  const setCartContent = () => {
+    setCart(cart.slice());
+    localStorage.setItem("cart", JSON.stringify(cart));
+    setCartSum(calculateCartSum(cart));
+    setCartDifferentItems(cart.length);
+    setCartTotalItems(calculateTotalItems(cart));
+  }
 
   const emptyCart = () => {
     cart.splice(0);
-    setCart(cart.slice());
-    localStorage.setItem("cart", JSON.stringify(cart));
-    setCartSum("0.00");
+    setCartContent();
   };
 
   const decreaseQuantity = (index) => {
@@ -26,23 +32,17 @@ const Cart = () => {
     if (cart[index].quantity === 0) {
       cart.splice(index, 1);
     }
-    setCart(cart.slice());
-    localStorage.setItem("cart", JSON.stringify(cart));
-    setCartSum(calculateCartSum(cart));
+    setCartContent();
   }
 
   const increaseQuantity = (index) => {
     cart[index].quantity++;
-    setCart(cart.slice());
-    localStorage.setItem("cart", JSON.stringify(cart));
-    setCartSum(calculateCartSum(cart));
+    setCartContent();
   }
 
   const deleteFromCart = (index) => {
     cart.splice(index, 1);
-    setCart(cart.slice());
-    localStorage.setItem("cart", JSON.stringify(cart));
-    setCartSum(calculateCartSum(cart));
+    setCartContent();
   };
 
   // const calculateCartSum = () => {

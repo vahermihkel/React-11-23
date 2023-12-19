@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 import styles from "../../css/HomePage.module.css";
 import { useContext } from 'react';
 import { CartSumContext } from '../../store/CartSumContext';
-import { calculateCartSum } from '../../util/calculationsUtil';
+import { calculateCartSum, calculateTotalItems } from '../../util/calculationsUtil';
 
 const Product = ({ product }) => {
   const { t } = useTranslation();
-  const { setCartSum } = useContext(CartSumContext);
+  const { setCartSum, setCartDifferentItems, setCartTotalItems } = useContext(CartSumContext);
 
   const addToCart = (productClicked) => {
     // cartFromFile.push(product);
@@ -24,6 +24,8 @@ const Product = ({ product }) => {
       cartLS.push({"quantity": 1, "product": productClicked});
     }
     setCartSum(calculateCartSum(cartLS));
+    setCartDifferentItems(cartLS.length);
+    setCartTotalItems(calculateTotalItems(cartLS));
     localStorage.setItem("cart", JSON.stringify(cartLS));
 
     // 1. võtta vana seis localStoragest
