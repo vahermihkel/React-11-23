@@ -1,29 +1,44 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = () => {  // muudan componendi nime 
   const { login } = useContext(AuthContext);
-  const navigate = useNavigate(); // <---- kõik hookid peavad olema loodud componendi top-levelil
+  const navigate = useNavigate();           // muudan all olevat API endpointi
+  const url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + process.env.REACT_APP_FIREBASE_WEB_API_KEY;
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const [message, setMessage] = useState("");
 
-  const loginAndNavigate = () => {
-    // API päring
+  const loginAndNavigate = () => { // muudan funktsiooni nime
+    const payload = {
+      "email": emailRef.current.value,
+      "password": passwordRef.current.value,
+      "returnSecureToken": true
+    }
 
-    // õnnestub
-    login();
-    navigate("/admin");
-
-    // feilib --> useState-ga mingi sõnum
+    fetch(url, {"method": "POST", "body": JSON.stringify(payload)})
+      .then(res => res.json())
+      .then(json => {
+        if (json.error === undefined) {
+          login(json.idToken, json.refreshToken, json.expiresIn);
+          navigate("/admin");
+        } else {
+          setMessage(json.error.message)
+        } 
+      });
   }
 
   return (
     <div>
+      <div>{message}</div>
       <label>E-mail</label> <br />
-      <input type="text" /> <br />
+      <input ref={emailRef} type="text" /> <br />
       <label>Password</label> <br />
-      <input type="password" /> <br />
+      <input ref={passwordRef} type="password" /> <br />
+      {/* muudan funktsiooni nime ja nupu tähistust */}
       <button onClick={loginAndNavigate}>Login</button>
     </div>);
 };
 
-export default Login;
+export default Login; // muudan componendi nime
