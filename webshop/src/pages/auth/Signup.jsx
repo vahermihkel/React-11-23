@@ -3,7 +3,7 @@ import { AuthContext } from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const { login } = useContext(AuthContext);
+  const { saveAuthData, getUser } = useContext(AuthContext);
   const navigate = useNavigate(); // <---- kõik hookid peavad olema loodud componendi top-levelil
   const url = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=" + process.env.REACT_APP_FIREBASE_WEB_API_KEY;
   const emailRef = useRef();
@@ -22,7 +22,8 @@ const Signup = () => {
       .then(res => res.json())
       .then(json => {
         if (json.error === undefined) {
-          login(json.idToken, json.refreshToken, json.expiresIn);
+          saveAuthData(json.idToken, json.refreshToken, json.expiresIn);
+          getUser();
           navigate("/admin");
         } else {
           setMessage(json.error.message)
