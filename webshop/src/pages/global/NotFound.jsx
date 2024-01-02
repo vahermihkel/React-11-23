@@ -1,16 +1,27 @@
 import React from 'react'
+import Lottie from "lottie-react";
+                // css --> images
+import notFound from "../../images/NotFound.json";
 
-const NotFound = () => {
+//  npm install lottie-react
 
-  // pilt et ei leitud
 
-  // nupp "mine avalehele"
+function NotFound() {
+  const lottieProps = {
+    loop: true,
+    animationData: notFound,
+    style: {
+    width: '90vw',
+    height: '300px',
+    speed: 1,
+  },
+};
 
-  // tekst
-
-  return (
-    <div>NotFound</div>
-  )
+return (
+    <div className="center">
+      <Lottie {...lottieProps} />
+    </div>
+);
 }
 
 export default NotFound

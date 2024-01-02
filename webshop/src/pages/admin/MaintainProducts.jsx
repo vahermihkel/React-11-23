@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { findIndex } from "../../util/productsUtil.js";
 import { Spinner } from "react-bootstrap";
+import ConfirmationModal from "../../components/ConfirmationModal.jsx";
 
 // NÕUDED
 // failist kustutada üks toode +
@@ -12,6 +13,7 @@ import { Spinner } from "react-bootstrap";
 const MaintainProducts = () => {
   const { t } = useTranslation();
   const searchedRef = useRef();
+  const confirmationModal = useRef();
 
   const [products, setProducts] = useState([]);
   const [productsCopy, setDbProducts] = useState([]); // täpselt andmebaasi seis
@@ -38,12 +40,18 @@ const MaintainProducts = () => {
   }
 
   const deleteProduct = (id) => {
+    console.log(id);
     const index = findIndex(id, productsCopy);
-    productsCopy.splice(index, 1);
-    // setProducts(productsCopy.slice());
-    fetch(productsDbUrl, {"method": "PUT", "body": JSON.stringify(productsCopy)});
-    searchFromProducts();
+    console.log(index);
+    if (index >= 0) { // kui index on -1, siis ei leitud. kui -1ga kustutatakse, siis kustutatakse lõpust
+      productsCopy.splice(index, 1);
+      // fetch(productsDbUrl, {"method": "PUT", "body": JSON.stringify(productsCopy)});
+      searchFromProducts();
+      confirmationModal.current.closeModal();
+    }
   };
+
+  
 
   if (loading) {
     return <Spinner />
@@ -51,6 +59,11 @@ const MaintainProducts = () => {
 
   return (
     <div>
+      <ConfirmationModal 
+        ref={confirmationModal}
+        modalMessage="product"
+        confirmed={deleteProduct}
+      />
       <input onChange={searchFromProducts} ref={searchedRef} type="text" />
       <div>{products.length} tk</div>
       {products.map((product) => (
@@ -62,7 +75,7 @@ const MaintainProducts = () => {
           <div>{product.description}</div>
           <div>{product.category}</div>
           <div>{product.active}</div>
-          <button onClick={() => deleteProduct(product.id)}>
+          <button onClick={() => confirmationModal.current.handleShow(product.id)}>
             {t("admin.delete")}
           </button>
 

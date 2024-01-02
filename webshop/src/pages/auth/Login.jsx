@@ -1,28 +1,22 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
+import AuthForm from "../../components/AuthForm";
 
 const Login = () => {  // muudan componendi nime 
   const { saveAuthData, getUser } = useContext(AuthContext);
   const navigate = useNavigate();           // muudan all olevat API endpointi
   const url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + process.env.REACT_APP_FIREBASE_WEB_API_KEY;
-  const emailRef = useRef();
-  const passwordRef = useRef();
   const [message, setMessage] = useState("");
 
-  const loginAndNavigate = () => { // muudan funktsiooni nime
-    const payload = {
-      "email": emailRef.current.value,
-      "password": passwordRef.current.value,
-      "returnSecureToken": true
-    }
-
+  const loginAndNavigate = async (payload) => { // muudan funktsiooni nime
     fetch(url, {"method": "POST", "body": JSON.stringify(payload)})
       .then(res => res.json())
-      .then(json => {
+      .then(async json => {
         if (json.error === undefined) {
           saveAuthData(json.idToken, json.refreshToken, json.expiresIn);
-          getUser();
+          await getUser();
+          console.log("HAKKASIN NAVIGEERIMA");
           navigate("/admin");
         } else {
           setMessage(json.error.message)
@@ -32,12 +26,11 @@ const Login = () => {  // muudan componendi nime
 
   return (
     <div>
-      <div>{message}</div>
-      <label>E-mail</label> <br />
-      <input ref={emailRef} type="text" /> <br />
-      <label>Password</label> <br />
-      <input ref={passwordRef} type="password" /> <br />
-      <button onClick={loginAndNavigate}>Login</button>
+      <AuthForm 
+        message={message}
+        buttonName="Login"
+        submitted={loginAndNavigate}
+      />
     </div>);
 };
 

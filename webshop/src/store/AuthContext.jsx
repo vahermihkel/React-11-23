@@ -38,17 +38,18 @@ export function AuthContextProvider({ children }) {
     return true;
   }
 
-  const getUser = () => {
+  const getUser = async () => {
     const payload = {
       "idToken": sessionStorage.getItem("token")
     }
     fetch(url, {"method": "POST", "body": JSON.stringify(payload)})
       .then(res => res.json())
       .then(json => {
-        console.log(json);
+        console.log("SAIN USERI:"+json);
         if (json.error === undefined) { 
           setLoggedInUser(json.users[0]);
           setIsLoggedIn(true);
+          checkLogin();
         } else {
           logout();
         }
@@ -85,6 +86,22 @@ export function AuthContextProvider({ children }) {
     setIsLoggedIn(false);
     sessionStorage.clear();
     setLoggedInUser(null);
+  }
+
+  // Token: 1. aegumisaeg
+  //        2. kelle token (isikukood, e-mail)
+  //        3. võti millega soolata
+  //        4. meie ettevõtte nimi?
+  //        5. admin/tavaõigus?
+
+  let checkLoginId;
+  const checkLogin = ()=>{
+      console.log(new Date(Number(sessionStorage.getItem("expiresIn"))))
+      if(checkLoginId)clearTimeout(checkLoginId);
+      if( Date.now()>Number(sessionStorage.getItem("expiresIn"))){
+          logout();
+      }
+      checkLoginId=setTimeout(checkLogin,1000);
   }
 
   return (     // saan igast failist, kes contexti impordib neid alumisi kätte
