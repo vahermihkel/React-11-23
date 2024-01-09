@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 // import productsFromFile from "../../data/products.json";
 
@@ -9,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 
 const AddProduct = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const imageRef = useRef();
   const nameRef = useRef();
@@ -18,9 +16,11 @@ const AddProduct = () => {
   const categoryRef = useRef();
   const isActiveRef = useRef();
   const [dbProducts, setDbProducts] = useState([]); // täpselt andmebaasi seis
+  const [categories, setCategories] = useState([]); // täpselt andmebaasi seis
 
   const previousMaximumId = Math.max(...dbProducts.map(product => product.id));
   const productsDbUrl = process.env.REACT_APP_PRODUCTS_DB_URL;
+  const categoriesDbUrl = process.env.REACT_APP_CATEGORIES_DB_URL;
   
   useEffect(() => {
     fetch(productsDbUrl)
@@ -28,7 +28,12 @@ const AddProduct = () => {
       .then(json => {
         setDbProducts(json);
       })
-  }, [productsDbUrl]);
+    fetch(categoriesDbUrl)
+      .then(res => res.json())
+      .then(json => {
+        setCategories(json);
+      })
+  }, [productsDbUrl, categoriesDbUrl]);
 
   const addProduct = () => {
     if (nameRef.current.value === "") {
@@ -51,8 +56,20 @@ const AddProduct = () => {
       }
     )
 
-    fetch(productsDbUrl, {"method": "PUT", "body": JSON.stringify(dbProducts)})
-      .then(() => navigate("/admin/products"));
+    const headers = {
+      // "Authorization": "Bearer " + sessionStorage.getItem("token"),
+      "Content-Type": "application/json"
+    }
+
+    fetch(productsDbUrl, {"method": "PUT", "body": JSON.stringify(dbProducts), "headers": headers})
+      .then(() => {
+        imageRef.current.value = "";
+        nameRef.current.value = "";
+        priceRef.current.value = "";
+        descriptionRef.current.value = "";
+        categoryRef.current.value = "";
+        isActiveRef.current.value = false;
+      });
   }
   
 
@@ -71,7 +88,10 @@ const AddProduct = () => {
       <input ref={descriptionRef} type="text" /> <br />
 
       <label>{t("product.category")}</label> <br />
-      <input ref={categoryRef} type="text" /> <br />
+      {/* <input ref={categoryRef} type="text" /> <br /> */}
+      <select ref={categoryRef}>
+        {categories.map(category => <option key={category.name}>{category.name}</option>)}
+      </select> <br />
 
       <label>{t("product.active")}</label> <br />
       <input ref={isActiveRef} type="checkbox"  /> <br />

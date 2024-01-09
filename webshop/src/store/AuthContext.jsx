@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
       // tema kaudu hakkan võtma mida context väljastab
 export const AuthContext = createContext();
@@ -18,7 +19,7 @@ export function AuthContextProvider({ children }) {
   useEffect(() => {
     const isOk = validateAuthData();
     if (isOk) {
-      getUser();
+      getUser(false);
     }
   }, [url]);
 
@@ -38,7 +39,9 @@ export function AuthContextProvider({ children }) {
     return true;
   }
 
-  const getUser = async () => {
+  const navigate = useNavigate();
+
+  const getUser = (isNavigated) => {
     const payload = {
       "idToken": sessionStorage.getItem("token")
     }
@@ -50,6 +53,9 @@ export function AuthContextProvider({ children }) {
           setLoggedInUser(json.users[0]);
           setIsLoggedIn(true);
           checkLogin();
+          if (isNavigated) {
+            navigate("/admin");
+          }
         } else {
           logout();
         }
@@ -93,20 +99,29 @@ export function AuthContextProvider({ children }) {
   //        3. võti millega soolata
   //        4. meie ettevõtte nimi?
   //        5. admin/tavaõigus?
+  const [isLogoutModal, setLogoutModal] = useState(false);
 
   let checkLoginId;
   const checkLogin = ()=>{
-      console.log(new Date(Number(sessionStorage.getItem("expiresIn"))))
-      if(checkLoginId)clearTimeout(checkLoginId);
+      // console.log(new Date(Number(sessionStorage.getItem("expiresIn"))))
+      console.log("checkin");
+      if(checkLoginId){
+        clearTimeout(checkLoginId);
+        console.log("clearib");
+      };
       if( Date.now()>Number(sessionStorage.getItem("expiresIn"))){
           logout();
+          console.log("login välja");
+          setLogoutModal(true);
+      } else {
+        checkLoginId=setTimeout(checkLogin,1000);
       }
-      checkLoginId=setTimeout(checkLogin,1000);
   }
 
   return (     // saan igast failist, kes contexti impordib neid alumisi kätte
     <AuthContext.Provider value={{
-      isLoggedIn, saveAuthData, logout, loggedInUser, getUser
+      isLoggedIn, saveAuthData, logout, 
+      loggedInUser, getUser, isLogoutModal
       }}>
         {children}
     </AuthContext.Provider>

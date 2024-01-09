@@ -15,24 +15,31 @@ import MaintainShops from './pages/admin/MaintainShops';
 import Login from './pages/auth/Login';
 import Signup from './pages/auth/Signup';
 import NavigationBar from './components/NavigationBar';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from './store/AuthContext';
 import NotFound from './pages/global/NotFound';
 import Profile from './pages/auth/Profile';
 import Loader from './components/Loader';
+import InfoModal from './components/InfoModal';
 
 function App() {
-  const { isLoggedIn, loggedInUser } = useContext(AuthContext);
-  const isLoaded = loggedInUser === null && sessionStorage.getItem("token");
+  const { isLogoutModal, isLoggedIn, loggedInUser } = useContext(AuthContext);
+  const [hasWaited, setHasWaited] = useState(false);
+  const isLoading = (loggedInUser === null && sessionStorage.getItem("token")) || hasWaited === false;
 
-  // const showLoader = () => {
-    
-  // }
+  useEffect(() => {
+    setTimeout(() => {
+      console.log("TRUE");
+      setHasWaited(true);
+    }, 1600);
+  }, []);
 
   return (
     <div className="App">
-      { isLoaded ? <Loader loaderWidth="90vw" loaderHeight="300px" /> : 
+      { isLoading ? <Loader loaderWidth="90vw" loaderHeight="300px" /> : 
       <>
+        { isLogoutModal && <InfoModal /> }
+
         <NavigationBar />
 
         <Routes>
@@ -68,16 +75,14 @@ export default App;
 
 // 11. 28.12
 // 12. 02.01 kell 17.30-20.45
-// 13. 09.01 kell 14.00-17.15   auth lõpuni  TypeScript
-// 14. 11.01 TypeScript, Next.js
-// 15. 16.01 Next.js 
-// 16. 18.01 useMemo, useCallback, useReducer
-// 17. 23.01
+// 13. 09.01 kell 14.00-17.15   auth lõpuni
+// 14. 11.01 kell 14.00-17.15 useCallback, useMemo, TypeScript
+// 15. 16.01 TypeScript, Next.js 
+// 16. 18.01 Next.js, useReducer
+// 17. 23.01 unit Testid, Hookid, Redux, React-Query, React Native
 // 18. 01.02    2ak/h
 
-  // const showLoader = () => {} ---> näita laadimine lõpuni
-  // sisselogimisel ei suuna
-  // kui aeg läbi, siis viskab välja --> annab teada / suunab kuhugi lehele
-  // // võimalik ka pikendada?
-  // erinevad viisid kuidas andmeid vahetada
+  // väljalogimise modal 5 min enne ja siis võimalus pikendada VÕI kui ei reageeri, siis logib välja
+  // kategooriad dropdownist
+  // useCallBack --> erroritest saaks lahti
 

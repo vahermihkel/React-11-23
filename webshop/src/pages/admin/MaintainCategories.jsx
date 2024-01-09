@@ -35,7 +35,7 @@ const MaintainCategories = () => {
       <input ref={categoryRef} type="text" /> <br />
       <button onClick={add}>Lisa</button> <br />
       {categories.map((category, index) => 
-        <div>
+        <div key={category.name}>
           {category.name}
           <button onClick={() => remove(index)}>x</button>
         </div>)}
