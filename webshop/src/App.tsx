@@ -77,7 +77,7 @@ export default App;
 // 12. 02.01 kell 17.30-20.45
 // 13. 09.01 kell 14.00-17.15   auth lõpuni
 // 14. 11.01 kell 14.00-17.15 useCallback, useMemo, TypeScript
-// 15. 16.01 TypeScript, Next.js 
+// 15. 16.01 kell 14.00-17.15 TypeScript, Next.js 
 // 16. 18.01 Next.js, useReducer
 // 17. 23.01 unit Testid, Hookid, Redux, React-Query, React Native
 // 18. 01.02    2ak/h

@@ -15,13 +15,13 @@ const Product = ({ product }) => {
 
     const cartLS = JSON.parse(localStorage.getItem("cart") || "[]");
 
-    const index = cartLS.findIndex(p => p.product.id === productClicked.id);
+    const index = cartLS.findIndex(p => p.productId === productClicked.id);
     if (index !== -1) {
       cartLS[index].quantity++;
       // cartLS[index].quantity += 1;
       // cartLS[index].quantity = cartLS[index].quantity + 1;
     } else {
-      cartLS.push({"quantity": 1, "product": productClicked});
+      cartLS.push({"quantity": 1, "productId": productClicked.id});
     }
     setCartSum(calculateCartSum(cartLS));
     setCartDifferentItems(cartLS.length);

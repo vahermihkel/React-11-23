@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../store/AuthContext";
-import { useNavigate } from "react-router-dom";
 import AuthForm from "../../components/AuthForm";
 
 const Signup = () => {

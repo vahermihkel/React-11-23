@@ -1,7 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../store/AuthContext";
-import { useNavigate } from "react-router-dom";
-
 
 const Profile = () => {
   const { getUser, loggedInUser } = useContext(AuthContext);
