@@ -77,12 +77,11 @@ export default App;
 // 12. 02.01 kell 17.30-20.45
 // 13. 09.01 kell 14.00-17.15   auth lõpuni
 // 14. 11.01 kell 14.00-17.15 useCallback, useMemo, TypeScript
-// 15. 16.01 kell 14.00-17.15 TypeScript, Next.js 
-// 16. 18.01 Next.js, useReducer
-// 17. 23.01 unit Testid, Hookid, Redux, React-Query, React Native
+// 15. 16.01 kell 14.00-15.30 TypeScript
+// 16. 18.01 kell 14.00-15.30 Hookid, useReducer, useAfterEffect, custom Hookid, Redux, Unit testid
+// 17. 23.01 kell 14.00-17.15 Next.js (CRUD, MongoDB), React-Query
+// 17. 25.01 kell 14.00-17.15 React Native
 // 18. 01.02    2ak/h
 
   // väljalogimise modal 5 min enne ja siis võimalus pikendada VÕI kui ei reageeri, siis logib välja
-  // kategooriad dropdownist
-  // useCallBack --> erroritest saaks lahti
 

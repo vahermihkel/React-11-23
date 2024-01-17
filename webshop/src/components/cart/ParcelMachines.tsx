@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
+import { Omniva } from '../../models/Omniva';
 
 // rafce
 const ParcelMachines = () => {
-  const [parcelMachines, setParcelMachines] = useState([]);
+  const [parcelMachines, setParcelMachines] = useState<Omniva[]>([]);
   const url = "https://www.omniva.ee/locations.json";
 
   useEffect(() => {
     fetch(url)
-      .then(response => response.json())
-      .then(json => {
-        const result = json.filter(pm => pm.A0_NAME === "EE" && !pm.NAME.includes("1. eelistus"));
+      .then((response: Response) => response.json())
+      .then((json: Omniva[]) => {
+        const result: Omniva[] = json.filter(pm => pm.A0_NAME === "EE" && !pm.NAME.includes("1. eelistus"));
         setParcelMachines(result);
       })
   }, []);

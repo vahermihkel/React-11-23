@@ -9,9 +9,10 @@ import { calculateCartSum, calculateTotalItems } from "../../util/calculationsUt
 import { Spinner } from "react-bootstrap";
 
 const Cart = () => {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState<any[]>([]); // cartHTML.json failist tuleb mudel
   // const cartLocalStorageKey = process.env.REACT_APP_LS_KEY;
-  const cartLS = useMemo(() => JSON.parse(localStorage.getItem("cart") || "[]"), []);
+  // cartLocalStorage.json failist tuleb mudel
+  const cartLS: any[] = useMemo(() => JSON.parse(localStorage.getItem("cart") || "[]"), []);
   const { t } = useTranslation();
   const { setCartSum, setCartDifferentItems, setCartTotalItems } = useContext(CartSumContext);
   const [loading, setLoading] = useState(true);
@@ -27,9 +28,9 @@ const Cart = () => {
   // console.log(cartLS);
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_PRODUCTS_DB_URL)
+    fetch(process.env.REACT_APP_PRODUCTS_DB_URL || "") // võiks tegelikult olla muutujas ja returnida kui ei ole
       .then(res => res.json())
-      .then(json => {
+      .then((json: any[]) => {
         
         const cartWithProducts = cartLS.map(element => ({
           "quantity": element.quantity,
@@ -54,7 +55,7 @@ const Cart = () => {
     setCartContent();
   };
 
-  const decreaseQuantity = (index) => {
+  const decreaseQuantity = (index: number) => {
     cart[index].quantity--;
     cartLS[index].quantity--;
     if (cart[index].quantity === 0) {
@@ -64,13 +65,13 @@ const Cart = () => {
     setCartContent();
   }
 
-  const increaseQuantity = (index) => {
+  const increaseQuantity = (index: number) => {
     cart[index].quantity++;
     cartLS[index].quantity++;
     setCartContent();
   }
 
-  const deleteFromCart = (index) => {
+  const deleteFromCart = (index: number) => {
     cart.splice(index, 1);
     cartLS.splice(index, 1);
     setCartContent();

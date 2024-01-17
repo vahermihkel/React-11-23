@@ -9,20 +9,21 @@ import { useTranslation } from 'react-i18next';
 const AddProduct = () => {
   const { t } = useTranslation();
 
-  const imageRef = useRef();
-  const nameRef = useRef();
-  const priceRef = useRef();
-  const descriptionRef = useRef();
-  const categoryRef = useRef();
-  const isActiveRef = useRef();
-  const [dbProducts, setDbProducts] = useState([]); // täpselt andmebaasi seis
-  const [categories, setCategories] = useState([]); // täpselt andmebaasi seis
+  const imageRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const priceRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLInputElement>(null);
+  const categoryRef = useRef<HTMLSelectElement>(null);
+  const isActiveRef = useRef<HTMLInputElement>(null); //<Product[]>
+  const [dbProducts, setDbProducts] = useState<any[]>([]); // täpselt andmebaasi seis
+  const [categories, setCategories] = useState<any[]>([]); // täpselt andmebaasi seis
 
   const previousMaximumId = Math.max(...dbProducts.map(product => product.id));
   const productsDbUrl = process.env.REACT_APP_PRODUCTS_DB_URL;
   const categoriesDbUrl = process.env.REACT_APP_CATEGORIES_DB_URL;
   
   useEffect(() => {
+    if (productsDbUrl === undefined || categoriesDbUrl === undefined) return;
     fetch(productsDbUrl)
       .then(res => res.json())
       .then(json => {
@@ -36,23 +37,33 @@ const AddProduct = () => {
   }, [productsDbUrl, categoriesDbUrl]);
 
   const addProduct = () => {
-    if (nameRef.current.value === "") {
+    const nameInput = nameRef.current;
+    const imageInput = imageRef.current;
+    const priceInput = priceRef.current;
+    const descriptionInput = descriptionRef.current;
+    const categoryInput = categoryRef.current;
+    const isActiveInput = isActiveRef.current;
+    if (nameInput === null || imageInput === null ||
+      priceInput === null || descriptionInput === null ||
+      categoryInput === null || isActiveInput === null ) return;
+
+    if (nameInput.value === "") {
       return
     }
 
-    if (priceRef.current.value === "") {
+    if (priceInput.value === "") {
       return
     }
   
     dbProducts.push(
       {
         "id": previousMaximumId + 1,
-        "image": imageRef.current.value,
-        "name": nameRef.current.value,
-        "price": Number(priceRef.current.value),
-        "description": descriptionRef.current.value,
-        "category": categoryRef.current.value,
-        "active": isActiveRef.current.checked,
+        "image": imageInput.value,
+        "name": nameInput.value,
+        "price": Number(priceInput.value),
+        "description": descriptionInput.value,
+        "category": categoryInput.value,
+        "active": isActiveInput.checked,
       }
     )
 
@@ -61,14 +72,15 @@ const AddProduct = () => {
       "Content-Type": "application/json"
     }
 
+    if (productsDbUrl === undefined) return;
     fetch(productsDbUrl, {"method": "PUT", "body": JSON.stringify(dbProducts), "headers": headers})
       .then(() => {
-        imageRef.current.value = "";
-        nameRef.current.value = "";
-        priceRef.current.value = "";
-        descriptionRef.current.value = "";
-        categoryRef.current.value = "";
-        isActiveRef.current.value = false;
+        imageInput.value = "";
+        nameInput.value = "";
+        priceInput.value = "";
+        descriptionInput.value = "";
+        categoryInput.value = "";
+        isActiveInput.checked = false;
       });
   }
   
