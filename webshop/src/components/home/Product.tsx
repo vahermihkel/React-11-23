@@ -3,30 +3,27 @@ import { useTranslation } from 'react-i18next';
 import styles from "../../css/HomePage.module.css";
 import { useContext } from 'react';
 import { CartSumContext } from '../../store/CartSumContext';
-import { calculateCartSum, calculateTotalItems } from '../../util/calculationsUtil';
+// import { PaymentProps } from '../../models/payment/PaymentProps';
+ 
+// type PaymentProps = {
+//  product: any
+//  dbProducts: any
+// }
 
-const Product = ({ product }) => {
+const Product = ({ product }: any) => {
   const { t } = useTranslation();
-  const { setCartSum, setCartDifferentItems, setCartTotalItems } = useContext(CartSumContext);
+  const { updateCartProperties } = useContext(CartSumContext);
 
-  const addToCart = (productClicked) => {
-    // cartFromFile.push(product);
-    // localStorage.setItem("cart", cartFromFile);
-
-    const cartLS = JSON.parse(localStorage.getItem("cart") || "[]");
-
+  const addToCart = (productClicked: any) => {
+    const cartLS: any[] = JSON.parse(localStorage.getItem("cart") || "[]");
     const index = cartLS.findIndex(p => p.productId === productClicked.id);
     if (index !== -1) {
       cartLS[index].quantity++;
-      // cartLS[index].quantity += 1;
-      // cartLS[index].quantity = cartLS[index].quantity + 1;
     } else {
       cartLS.push({"quantity": 1, "productId": productClicked.id});
     }
-    setCartSum(calculateCartSum(cartLS));
-    setCartDifferentItems(cartLS.length);
-    setCartTotalItems(calculateTotalItems(cartLS));
-    localStorage.setItem("cart", JSON.stringify(cartLS));
+    updateCartProperties(false, cartLS);
+
 
     // 1. võtta vana seis localStoragest
     // 2. parse-da Array kujule ehk võtta jutumärgid maha

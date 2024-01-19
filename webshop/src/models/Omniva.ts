@@ -11,8 +11,8 @@ export type Omniva = {
   A6_NAME: string
   A7_NAME: string
   A8_NAME: string
-  X_COORDINATE: string
-  Y_COORDINATE: string
+  X_COORDINATE?: string
+  Y_COORDINATE?: string
   SERVICE_HOURS: string
   TEMP_SERVICE_HOURS: string
   TEMP_SERVICE_HOURS_UNTIL: string

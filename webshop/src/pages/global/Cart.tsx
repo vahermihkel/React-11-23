@@ -5,17 +5,20 @@ import ParcelMachines from "../../components/cart/ParcelMachines";
 import styles from "../../css/Cart.module.css";
 import Payment from "../../components/cart/Payment";
 import { CartSumContext } from "../../store/CartSumContext";
-import { calculateCartSum, calculateTotalItems } from "../../util/calculationsUtil";
+import { calculateCartSum } from "../../util/calculationsUtil";
 import { Spinner } from "react-bootstrap";
 
-const Cart = () => {
+const Cart = () => {      // {quantity: 1, product: Product}
   const [cart, setCart] = useState<any[]>([]); // cartHTML.json failist tuleb mudel
   // const cartLocalStorageKey = process.env.REACT_APP_LS_KEY;
   // cartLocalStorage.json failist tuleb mudel
+                          // {quantity: 1, productId}
   const cartLS: any[] = useMemo(() => JSON.parse(localStorage.getItem("cart") || "[]"), []);
   const { t } = useTranslation();
-  const { setCartSum, setCartDifferentItems, setCartTotalItems } = useContext(CartSumContext);
+  const { dispatchCartSum, updateCartProperties } = useContext(CartSumContext);
   const [loading, setLoading] = useState(true);
+                          // [{id: 1}, {id: 2}]
+  // const [products, setProducts] = useState<any[]>([]);
   // const number2 = useMemo(() => kulukasFunktsioon(), []);
 
   // const [number, setNumber] = useState(0);
@@ -31,7 +34,7 @@ const Cart = () => {
     fetch(process.env.REACT_APP_PRODUCTS_DB_URL || "") // võiks tegelikult olla muutujas ja returnida kui ei ole
       .then(res => res.json())
       .then((json: any[]) => {
-        
+        // setProducts(json);
         const cartWithProducts = cartLS.map(element => ({
           "quantity": element.quantity,
           "product": json.find(product => product.id === element.productId)
@@ -43,16 +46,15 @@ const Cart = () => {
 
   const setCartContent = () => {
     setCart(cart.slice());
+    updateCartProperties(true, cart);
     localStorage.setItem("cart", JSON.stringify(cartLS));
-    setCartSum(calculateCartSum(cart));
-    setCartDifferentItems(cart.length);
-    setCartTotalItems(calculateTotalItems(cart));
   }
 
   const emptyCart = () => {
     cart.splice(0);
     cartLS.splice(0);
     setCartContent();
+    dispatchCartSum({"type": "EMPTY", "payload": 0});
   };
 
   const decreaseQuantity = (index: number) => {
@@ -63,6 +65,7 @@ const Cart = () => {
       cartLS.splice(index, 1); 
     }
     setCartContent();
+    dispatchCartSum({"type": "DEDUCT", "payload": cart[index].product.price});
   }
 
   const increaseQuantity = (index: number) => {
