@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { CartSumContext } from "../store/CartSumContext";
 import { AuthContext } from "../store/AuthContext";
+import { useSelector } from "react-redux";
 
 const NavigationBar = () => {
   const { t, i18n } = useTranslation();
@@ -15,6 +16,7 @@ const NavigationBar = () => {
     useContext(CartSumContext);
   const { loggedInUser, isLoggedIn, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const cartSumRedux = useSelector(state => state.cartSumReducer.cartSum);
 
   const changeLang = (newLang) => {
     i18n.changeLanguage(newLang);
@@ -72,6 +74,7 @@ const NavigationBar = () => {
             </span>{" "}
             &nbsp;
             <span>{cartSum} €</span>
+            <span>! {cartSumRedux.toFixed(2)} !</span>
             {!isLoggedIn ? (
               <>
                 <Nav.Link as={Link} to="/login">

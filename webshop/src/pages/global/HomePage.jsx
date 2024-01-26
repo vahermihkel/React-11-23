@@ -4,24 +4,31 @@ import styles from "../../css/HomePage.module.css";
 import SortButtons from '../../components/home/SortButtons';
 import FilterButtons from '../../components/home/FilterButtons';
 import Product from '../../components/home/Product';
+import useFetchProducts from '../../util/useFetchProducts';
 
 const HomePage = () => {
 
   const [products, setProducts] = useState([]); // väljanäidatav HTMLs
   // const productsCopy = productsFromFile;
-  const [productsCopy, setDbProducts] = useState([]); // täpselt andmebaasi seis
-  const [loading, setLoading] = useState(true);
-  const productsDbUrl = process.env.REACT_APP_PRODUCTS_DB_URL;
+  // const [productsCopy, setDbProducts] = useState([]); // täpselt andmebaasi seis
+  // const [loading, setLoading] = useState(true);
+  // const productsDbUrl = process.env.REACT_APP_PRODUCTS_DB_URL;
   
+  // useEffect(() => {
+  //   fetch(productsDbUrl)
+  //     .then(res => res.json())
+  //     .then(json => {
+  //       setProducts(json);
+  //       setDbProducts(json);
+  //       setLoading(false);
+  //     })
+  // }, [productsDbUrl]);
+
+  const [productsCopy, loading] = useFetchProducts();
+
   useEffect(() => {
-    fetch(productsDbUrl)
-      .then(res => res.json())
-      .then(json => {
-        setProducts(json);
-        setDbProducts(json);
-        setLoading(false);
-      })
-  }, [productsDbUrl]);
+    setProducts(productsCopy.slice());
+  }, [productsCopy]);
 
   if (loading) {
     return <Spinner />

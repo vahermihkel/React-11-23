@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import styles from "../../css/HomePage.module.css";
 import { useContext } from 'react';
 import { CartSumContext } from '../../store/CartSumContext';
+import { useDispatch } from "react-redux";
+import { cartSumActions } from "../../store/cartSum";
 // import { PaymentProps } from '../../models/payment/PaymentProps';
  
 // type PaymentProps = {
@@ -11,8 +13,11 @@ import { CartSumContext } from '../../store/CartSumContext';
 // }
 
 const Product = ({ product }: any) => {
+  const dispatch = useDispatch();
+
   const { t } = useTranslation();
   const { updateCartProperties } = useContext(CartSumContext);
+  
 
   const addToCart = (productClicked: any) => {
     const cartLS: any[] = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -23,13 +28,7 @@ const Product = ({ product }: any) => {
       cartLS.push({"quantity": 1, "productId": productClicked.id});
     }
     updateCartProperties(false, cartLS);
-
-
-    // 1. võtta vana seis localStoragest
-    // 2. parse-da Array kujule ehk võtta jutumärgid maha
-    // 3. lisada juurde   .push()
-    // 4. paneme jutumärgid ise peale -> keerame Array Stringiks
-    // 5. panna tagasi localStoragesse (set abil ehk asenda uue väärtusega vana)
+    dispatch(cartSumActions.add(productClicked.price));
   }
 
   return (

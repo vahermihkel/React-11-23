@@ -21,18 +21,23 @@ import NotFound from './pages/global/NotFound';
 import Profile from './pages/auth/Profile';
 import Loader from './components/Loader';
 import InfoModal from './components/InfoModal';
+import { useDispatch } from "react-redux";
+import { setInitialCart } from "./store/cartSum";
 
 function App() {
   const { isLogoutModal, isLoggedIn, loggedInUser } = useContext(AuthContext);
   const [hasWaited, setHasWaited] = useState(false);
   const isLoading = (loggedInUser === null && sessionStorage.getItem("token")) || hasWaited === false;
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(setInitialCart());
+
     setTimeout(() => {
       console.log("TRUE");
       setHasWaited(true);
     }, 1600);
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="App">
@@ -79,9 +84,16 @@ export default App;
 // 14. 11.01 kell 14.00-17.15 useCallback, useMemo, TypeScript
 // 15. 16.01 kell 14.00-15.30 TypeScript
 // 16. 18.01 kell 14.00-15.30 Hookid, useReducer, useAfterEffect, custom Hookid, Redux, Unit testid
-// 17. 23.01 kell 14.00-17.15 Next.js (CRUD, MongoDB), React-Query
-// 17. 25.01 kell 14.00-17.15 React Native
-// 18. 01.02    2ak/h
+// 17. 23.01 kell 14.00-17.15 unit testid, custom hooki, redux, Next.js (CRUD, MongoDB), React-Query
+// 17. 30.01 kell 14.00-17.15 Next.js (CRUD, MongoDB), React-Query
+// 18. 08.02    2ak/h
+
+// 30.01 ja 31.01 <--- allkirjalehele
 
   // väljalogimise modal 5 min enne ja siis võimalus pikendada VÕI kui ei reageeri, siis logib välja
 
+
+  // VÄLJATÕSTMISED (KORDUV KOOD)
+  // Ainult puhas JavaScript --> util ja export const function
+  // HTML ka (hookid võivad, ei pea) --> component
+  // HTMLi pole vaja, aga kasutan hooke --> custom hook

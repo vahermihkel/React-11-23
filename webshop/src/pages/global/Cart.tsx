@@ -7,8 +7,12 @@ import Payment from "../../components/cart/Payment";
 import { CartSumContext } from "../../store/CartSumContext";
 import { calculateCartSum } from "../../util/calculationsUtil";
 import { Spinner } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { cartSumActions } from "../../store/cartSum";
 
-const Cart = () => {      // {quantity: 1, product: Product}
+const Cart = () => {     
+  const dispatch = useDispatch();
+
   const [cart, setCart] = useState<any[]>([]); // cartHTML.json failist tuleb mudel
   // const cartLocalStorageKey = process.env.REACT_APP_LS_KEY;
   // cartLocalStorage.json failist tuleb mudel
@@ -55,6 +59,7 @@ const Cart = () => {      // {quantity: 1, product: Product}
     cartLS.splice(0);
     setCartContent();
     dispatchCartSum({"type": "EMPTY", "payload": 0});
+    dispatch(cartSumActions.empty());
   };
 
   const decreaseQuantity = (index: number) => {
@@ -66,18 +71,21 @@ const Cart = () => {      // {quantity: 1, product: Product}
     }
     setCartContent();
     dispatchCartSum({"type": "DEDUCT", "payload": cart[index].product.price});
+    dispatch(cartSumActions.deduct(cart[index].product.price));
   }
 
   const increaseQuantity = (index: number) => {
     cart[index].quantity++;
     cartLS[index].quantity++;
     setCartContent();
+    dispatch(cartSumActions.add(cart[index].product.price));
   }
 
   const deleteFromCart = (index: number) => {
     cart.splice(index, 1);
     cartLS.splice(index, 1);
     setCartContent();
+    dispatch(cartSumActions.deduct(cart[index].product.price * cart[index].quantity));
   };
 
   // const calculateCartSum = () => {

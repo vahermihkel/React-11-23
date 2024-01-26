@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { findIndex } from "../../util/productsUtil.js";
 import { Spinner } from "react-bootstrap";
 import ConfirmationModal from "../../components/ConfirmationModal.jsx";
+import useFetchProducts from "../../util/useFetchProducts.js";
 
 // NÕUDED
 // failist kustutada üks toode +
@@ -16,19 +17,12 @@ const MaintainProducts = () => {
   const confirmationModal = useRef();
 
   const [products, setProducts] = useState([]);
-  const [productsCopy, setDbProducts] = useState([]); // täpselt andmebaasi seis
-  const [loading, setLoading] = useState(true);
-  const productsDbUrl = process.env.REACT_APP_PRODUCTS_DB_URL;
-  
+  // const {dbProducts: productsCopy, loading} = useFetchProducts();
+  const [productsCopy, loading] = useFetchProducts();
+
   useEffect(() => {
-    fetch(productsDbUrl)
-      .then(res => res.json())
-      .then(json => {
-        setProducts(json);
-        setDbProducts(json);
-        setLoading(false);
-      })
-  }, [productsDbUrl]);
+    setProducts(productsCopy.slice());
+  }, [productsCopy]);
 
   const searchFromProducts = () => {
     const result = productsCopy.filter(product => 

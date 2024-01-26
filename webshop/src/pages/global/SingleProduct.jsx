@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 import { findProduct } from '../../util/productsUtil.js';
 import { Spinner } from 'react-bootstrap';
+import useFetchProducts from '../../util/useFetchProducts.js';
 // import productsFromFile from "../../data/products.json";
 
 const SingleProduct = () => {
@@ -10,18 +10,7 @@ const SingleProduct = () => {
   const { t } = useTranslation();
   const { id } = useParams();
 
-  const [dbProducts, setDbProducts] = useState([]); // täpselt andmebaasi seis
-  const [loading, setLoading] = useState(true);
-  const productsDbUrl = process.env.REACT_APP_PRODUCTS_DB_URL;
-  
-  useEffect(() => {
-    fetch(productsDbUrl)
-      .then(res => res.json())
-      .then(json => {
-        setDbProducts(json);
-        setLoading(false);
-      })
-  }, [productsDbUrl]);
+  const [dbProducts, loading] = useFetchProducts(); 
 
   const product = findProduct(id, dbProducts);
 

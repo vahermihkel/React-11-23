@@ -9,7 +9,8 @@ import { BrowserRouter } from 'react-router-dom';
 import './i18n';
 import { CartSumContextProvider } from './store/CartSumContext';
 import { AuthContextProvider } from './store/AuthContext';
-
+import { Provider } from 'react-redux';
+import store from "./store/store";
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
@@ -17,7 +18,9 @@ root.render(
     <BrowserRouter>
         <CartSumContextProvider>
           <AuthContextProvider>
-            <App />
+            <Provider store={store}>
+              <App />
+            </Provider>
           </AuthContextProvider>
         </CartSumContextProvider>
     </BrowserRouter>
