@@ -22,22 +22,36 @@ import Profile from './pages/auth/Profile';
 import Loader from './components/Loader';
 import InfoModal from './components/InfoModal';
 import { useDispatch } from "react-redux";
-import { setInitialCart } from "./store/cartSum";
+import { cartSumActions, setInitialCart } from "./store/cartSum";
+import { calculateCartSum } from './util/calculationsUtil';
 
 function App() {
   const { isLogoutModal, isLoggedIn, loggedInUser } = useContext(AuthContext);
   const [hasWaited, setHasWaited] = useState(false);
   const isLoading = (loggedInUser === null && sessionStorage.getItem("token")) || hasWaited === false;
   const dispatch = useDispatch();
+  const productsDbUrl = process.env.REACT_APP_PRODUCTS_DB_URL;
 
   useEffect(() => {
-    dispatch(setInitialCart());
+    // setInitialCart();
+    // dispatch();
+    if (productsDbUrl === undefined) return;
+    fetch(productsDbUrl)
+      .then(res => res.json())
+      .then(json => {
+        const cartLS = JSON.parse(localStorage.getItem("cart") || "[]");
+        const cartWithProducts = cartLS.map((element: any) => ({
+          "quantity": element.quantity,
+          "product": json.find((product: any) => product.id === element.productId)
+        }));
+        dispatch(cartSumActions.initialize(Number(calculateCartSum(cartWithProducts))));
+      })
 
     setTimeout(() => {
       console.log("TRUE");
       setHasWaited(true);
     }, 1600);
-  }, [dispatch]);
+  }, [dispatch, productsDbUrl]);
 
   return (
     <div className="App">

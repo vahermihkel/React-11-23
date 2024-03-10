@@ -21,18 +21,9 @@ const cartSumSlice = createSlice({
 });
 
 export const setInitialCart = () => {
-  return async (dispatch) => {
-    fetch(process.env.REACT_APP_PRODUCTS_DB_URL)
-      .then(res => res.json())
-      .then(json => {
-        const cartLS = JSON.parse(localStorage.getItem("cart")) || [];
-        const cartWithProducts = cartLS.map(element => ({
-          "quantity": element.quantity,
-          "product": json.find(product => product.id === element.productId)
-        }));
-        dispatch(cartSumActions.initialize(Number(calculateCartSum(cartWithProducts))));
-      })
-  }
+  // return async (dispatch) => {
+    
+  // }
 }
 
 export const cartSumActions = cartSumSlice.actions;
